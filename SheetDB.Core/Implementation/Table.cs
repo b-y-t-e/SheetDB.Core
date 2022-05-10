@@ -29,7 +29,10 @@
             this._worksheetId = worksheetId;
         }
 
-        public void Delete()
+        public void Delete() =>
+            Delete(this._worksheetId);
+
+        public void Delete(string sheetId)
         {
             var uri = string.Format("https://sheets.googleapis.com/v4/spreadsheets/{0}:batchUpdate", this._spreadsheetId);
 
@@ -41,7 +44,7 @@
                 {
                     deleteSheet = new
                     {
-                        sheetId = this._worksheetId
+                        sheetId = sheetId
                     }
                 }
             });
@@ -113,21 +116,23 @@
         public IRow<T> GetById(string id)
         {
             var rowNumber = -1;
+            var tmpSheetName = $"LOOKUP_SHEET_{Guid.NewGuid().ToString().Replace("-", "_")}";
+            var tmpSheetId = "";
 
             try
             {
-                rowNumber = FindRowById<T>(id, _name);
+                tmpSheetId = CreateHiddenSheet(tmpSheetName);
+                rowNumber = FindRowById(id, _name, tmpSheetName);
             }
-            catch
+            finally
             {
-                CreateHiddenSheet();
-                rowNumber = FindRowById<T>(id, _name);
+                Delete(tmpSheetId);
             }
 
             return GetByIndex(rowNumber);
         }
 
-        private dynamic CreateHiddenSheet()
+        private string CreateHiddenSheet(string sheetName)
         {
             var uri = string.Format("https://sheets.googleapis.com/v4/spreadsheets/{0}:batchUpdate", this._spreadsheetId);
 
@@ -143,8 +148,8 @@
                         {
                             properties = new
                             {
-                                //hidden = true,
-                                title= "LOOKUP_SHEET"
+                                hidden = true,
+                                title = sheetName
                             }
                         }
                     }
@@ -156,10 +161,33 @@
             dynamic data = response
                  .Status(HttpStatusCode.OK)
                  .Response.Data<dynamic>();
-            return data;
+
+            /*{
+              "spreadsheetId": "1Sfci40kAQCOxVVRpScR7jtButE-YGYybuWMAKgPyg80",
+              "replies": [
+                {
+                  "addSheet": {
+                    "properties": {
+                      "sheetId": 872377719,
+                      "title": "LOOKUP_SHEET_774b2bee_c927_4d2a_a0a6_7848084fc554",
+                      "index": 3,
+                      "sheetType": "GRID",
+                      "gridProperties": {
+                        "rowCount": 1000,
+                        "columnCount": 26
+                      }
+                    }
+                  }
+                }
+              ]
+            }*/
+
+            var sheetId = data["replies"][0]["addSheet"]["properties"]["sheetId"];
+
+            return Convert.ToString(sheetId);
         }
 
-        private int FindRowById<T>(string idValue, string sheetName)
+        private int FindRowById(string idValue, string sheetName, string tmpSheetName)
         {
             var type = typeof(T);
 
@@ -169,13 +197,13 @@
             var idIndex = idProperty == null ? 1 : (properties.IndexOf(idProperty) + 1);
             var letter = GetExcelColumnName(idIndex);
 
-            var uri = string.Format("https://sheets.googleapis.com/v4/spreadsheets/{0}/values/LOOKUP_SHEET!A1?includeValuesInResponse=true&responseValueRenderOption=UNFORMATTED_VALUE&valueInputOption=USER_ENTERED&fields=updatedData", this._spreadsheetId);
+            var uri = string.Format("https://sheets.googleapis.com/v4/spreadsheets/{0}/values/" + tmpSheetName + "!A1?includeValuesInResponse=true&responseValueRenderOption=UNFORMATTED_VALUE&valueInputOption=USER_ENTERED&fields=updatedData", this._spreadsheetId);
 
             var request = this._connector.CreateRequest(uri);
 
             var payload = JsonConvert.SerializeObject(new
             {
-                range = "LOOKUP_SHEET!A1",
+                range = tmpSheetName + "!A1",
                 values = new[]
                 {
                     new []
