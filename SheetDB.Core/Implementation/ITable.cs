@@ -12,6 +12,13 @@ namespace SheetDB.Implementation
 
         IRow<T> GetByIndex(int rowNumber);
 
+        IRow<T> GetById(string id);
+
         List<IRow<T>> GetAll();
+    }
+
+    public class SheetIdAttribute : Attribute
+    {
+
     }
 }

@@ -110,6 +110,116 @@
             return new Row<T>(this._connector, record, this._spreadsheetId, this._worksheetId, range);
         }
 
+        public IRow<T> GetById(string id)
+        {
+            var rowNumber = -1;
+
+            try
+            {
+                rowNumber = FindRowById<T>(id, _name);
+            }
+            catch
+            {
+                CreateHiddenSheet();
+                rowNumber = FindRowById<T>(id, _name);
+            }
+
+            return GetByIndex(rowNumber);
+        }
+
+        private dynamic CreateHiddenSheet()
+        {
+            var uri = string.Format("https://sheets.googleapis.com/v4/spreadsheets/{0}:batchUpdate", this._spreadsheetId);
+
+            var request = this._connector.CreateRequest(uri);
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                requests = new[]
+                {
+                    new
+                    {
+                        addSheet = new
+                        {
+                            properties = new
+                            {
+                                //hidden = true,
+                                title= "LOOKUP_SHEET"
+                            }
+                        }
+                    }
+                }
+            });
+
+            var response = new ResponseValidator(this._connector.Send(request, HttpMethod.Post, payload));
+
+            dynamic data = response
+                 .Status(HttpStatusCode.OK)
+                 .Response.Data<dynamic>();
+            return data;
+        }
+
+        private int FindRowById<T>(string idValue, string sheetName)
+        {
+            var type = typeof(T);
+
+            var properties = type.GetProperties().ToList();
+            var idProperty = properties.
+                FirstOrDefault(x => x.GetCustomAttributes(true).Any(y => y.GetType() == typeof(SheetIdAttribute)));
+            var idIndex = idProperty == null ? 1 : (properties.IndexOf(idProperty) + 1);
+            var letter = GetExcelColumnName(idIndex);
+
+            var uri = string.Format("https://sheets.googleapis.com/v4/spreadsheets/{0}/values/LOOKUP_SHEET!A1?includeValuesInResponse=true&responseValueRenderOption=UNFORMATTED_VALUE&valueInputOption=USER_ENTERED&fields=updatedData", this._spreadsheetId);
+
+            var request = this._connector.CreateRequest(uri);
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                range = "LOOKUP_SHEET!A1",
+                values = new[]
+                {
+                    new []
+                    {
+                        "=MATCH(" + idValue + ", " + sheetName + "!"+letter+":"+letter+", 0)"
+                    }
+                }
+            });
+
+            var response = new ResponseValidator(this._connector.Send(request, HttpMethod.Put, payload));
+
+            dynamic data = response
+                 .Status(HttpStatusCode.OK)
+                 .Response.
+                 Data<dynamic>();
+
+            /*{
+             "updatedData": {
+              "range": "LOOKUP_SHEET!A1",
+              "majorDimension": "ROWS",
+              "values": [
+               [
+                3
+               ]
+              ]
+             }
+            }*/
+
+            var val = data["updatedData"]["values"][0][0];
+            return Convert.ToInt32(val) - 1;
+        }
+        private string GetExcelColumnName(int columnNumber)
+        {
+            string columnName = "";
+
+            while (columnNumber > 0)
+            {
+                int modulo = (columnNumber - 1) % 26;
+                columnName = Convert.ToChar('A' + modulo) + columnName;
+                columnNumber = (columnNumber - modulo) / 26;
+            }
+
+            return columnName;
+        }
         public IRow<T> GetByIndex(int rowNumber)
         {
             rowNumber = rowNumber + 1;
@@ -156,9 +266,9 @@
             JArray registros = data.values;
 
             return registros.Select((a, i) => new Row<T>(
-                this._connector, 
-                this.DeserializeElement((JArray)a), 
-                this._spreadsheetId, 
+                this._connector,
+                this.DeserializeElement((JArray)a),
+                this._spreadsheetId,
                 this._worksheetId,
                 string.Format("{0}!A{1}:{2}{3}", this._name, i + 1, fieldIndex, i + 1))).ToList() as List<IRow<T>>;
         }

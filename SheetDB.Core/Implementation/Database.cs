@@ -39,8 +39,10 @@
             if (sheets.Count > 0)
                 foreach (var sheet in sheets)
                     if (sheet.properties.title == name)
+                    {
+                        AddHeader<T>((string)sheet.properties.sheetId);
                         return new Table<T>(this._connector, name, this._spreadsheetId, (string)sheet.properties.sheetId);
-
+                    }
             return null;
         }
 
@@ -144,7 +146,7 @@
 
             if (permissions.Count > 0)
                 foreach (var permission in permissions)
-                    if (permission.emailAddress == email)
+                    if (permission.emailAddress.ToString().ToLower() == email.ToLower())
                     {
                         var role = (Role)System.Enum.Parse(typeof(Role), (string)permission.role, true);
                         var type = (Type)System.Enum.Parse(typeof(Type), (string)permission.type, true);
