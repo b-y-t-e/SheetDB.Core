@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Andrzej Ból</Authors>
+    <Company>Andrzej Ból</Company>
+    <Description>A database-like interface to Google Spreadsheets for .Net Core</Description>
+    <PackageProjectUrl>https://github.com/b-y-t-e/SheetDb.Core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/b-y-t-e/SheetDb.Core</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Impl\Lazy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
