@@ -9,7 +9,7 @@ namespace SheetDB.Tests
         public void Get_token()
         {
             //IConnector connector = ConnectorFactory.Create(
-            //    clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+            //    clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
             //    privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             //);
 

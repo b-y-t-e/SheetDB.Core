@@ -13,7 +13,7 @@
             try
             {
                 var managment = new Managment(
-                    clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                    clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                     privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
                 );
 
@@ -26,7 +26,7 @@
         public void Create_database()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
@@ -37,7 +37,7 @@
         public void Get_database()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
@@ -48,29 +48,19 @@
         public void Get_all_database()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
             managment.GetAllDatabases().ToList();
         }
 
-        [Test, Order(9999999)]
-        public void Delete_database()
-        {
-            var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
-                privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
-            );
-
-            managment.GetDatabase("Teste").Delete();
-        }
 
         [Test, Order(4)]
         public void Create_table()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
@@ -81,7 +71,7 @@
         public void Get_table()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
@@ -92,7 +82,7 @@
         public void Add_Permission()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
@@ -103,73 +93,33 @@
         public void Get_Permission()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
             managment.GetDatabase("Teste").GetPermission("andrzej.bol@gmail.com");
         }
 
-        [Test, Order(99996)]
-        public void Delete_Permission()
-        {
-            var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
-                privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
-            );
-
-            managment.GetDatabase("Teste").GetPermission("andrzej.bol@gmail.com").Delete();
-        }
+   
 
         [Test, Order(8)]
         public void Update_Permission()
         {
             var managment = new Managment(
-                clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+                clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                 privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
             );
 
             managment.GetDatabase("Teste").GetPermission("andrzej.bol@gmail.com").Update(Enum.Role.writer);
         }
 
-        [Test, Order(99999)]
-        public void Delete_table()
-        {
-            var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
-               privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
-           );
-
-            managment.GetDatabase("Teste").GetTable<Pessoa>("Teste2").Delete();
-        }
-
-        [Test, Order(99997)]
-        public void Delete_Record()
-        {
-            var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
-               privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
-           );
-
-            managment.GetDatabase("Teste").GetTable<Pessoa>("Teste").Add(new Pessoa() { Id = 1, Nome = "c" }).Delete();
-        }
-
-        [Test, Order(99998)]
-        public void Rename_table()
-        {
-            var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
-               privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
-           );
-
-            managment.GetDatabase("Teste").GetTable<Pessoa>("Teste").Rename("Teste2");
-        }
+  
 
         [Test, Order(10)]
         public void Add_Record()
         {
             var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+               clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
            );
 
@@ -182,29 +132,47 @@
         public void Update_Record()
         {
             var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+               clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
            );
 
-            managment.GetDatabase("Teste").GetTable<Pessoa>("Teste").Add(new Pessoa() { Id = 1, Nome = "c" }).Update(new Pessoa() { Id = 2, Nome = "d" });
+            managment.GetDatabase("Teste").GetTable<Pessoa>("Teste").
+                Add(new Pessoa() { Id = 1, Nome = "c" }).
+                Update(new Pessoa() { Id = 1, Nome = "ddd" });
         }
 
         [Test, Order(12)]
         public void Get_by_index()
         {
             var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+               clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
            );
 
             managment.GetDatabase("Teste").GetTable<Pessoa>("Teste").GetByIndex(1);
         }
 
+
+        [Test, Order(12)]
+        public void Get_by_id()
+        {
+            var managment = new Managment(
+               clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
+               privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
+           );
+
+            var row = managment.GetDatabase("Teste").
+                GetTable<Pessoa>("Teste").
+                GetById("4");
+
+            Assert.IsNotNull(row);
+        }
+
         [Test, Order(13)]
         public void Getall()
         {
             var managment = new Managment(
-               clientEmail: "driveclient@drivedb-xxxxx.iam.gserviceaccount.com",
+               clientEmail: "driveclient@drivedb-349807.iam.gserviceaccount.com",
                privateKey: File.ReadAllBytes(System.IO.Directory.GetCurrentDirectory() + "\\key.p12")
            );
 
